@@ -20,7 +20,7 @@ if __name__ == "__main__":
             inc += 100
             decrypt = tag.decrypt_message(result['payload'])
             date_time = datetime.fromtimestamp(int(result['datePublished'])/1000)
-            write_api.write("airtags", "hat", Point(tag.get_advertisement_key())
+            write_api.write(influxdb_db, influxdb_org, Point(tag.get_advertisement_key())
                             .field('latitude', decrypt['lat']).field("longitude", decrypt['lon'])
                             .field("tooltip", date_time.strftime("%d/%m/%Y %H:%M:%S"))
                             .time(int(result['datePublished']) * 1000000 + inc))

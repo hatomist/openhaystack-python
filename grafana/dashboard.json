@@ -1,0 +1,106 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "panels": [
+    {
+      "datasource": null,
+      "gridPos": {
+        "h": 16,
+        "w": 10,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "ant": {
+          "color": "rgb(0, 100, 255)",
+          "delay": 400,
+          "paused": false,
+          "pulseColor": "rgb(0, 0, 0)",
+          "reverse": false,
+          "weight": 5
+        },
+        "discardZeroOrNull": true,
+        "heat": {
+          "fitBoundsOnLoad": false,
+          "fitBoundsOnUpdate": false
+        },
+        "hex": {
+          "colorRangeFrom": "#f7fbff",
+          "colorRangeTo": "#ff0000",
+          "opacity": 0.6,
+          "radiusRangeFrom": 5,
+          "radiusRangeTo": 12
+        },
+        "map": {
+          "centerLatitude": 56.17203,
+          "centerLongitude": 10.1865203,
+          "tileUrlSchema": "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          "useBoundsInQuery": false,
+          "useCenterFromFirstPos": false,
+          "useCenterFromLastPos": true,
+          "zoom": 100,
+          "zoomToDataBounds": false
+        },
+        "marker": {
+          "alwaysShowTooltips": false,
+          "showOnlyLastMarker": false,
+          "size": 25,
+          "sizeLast": 25,
+          "useSecondaryIconForAllMarkers": false,
+          "useSecondaryIconForLastMarker": true
+        },
+        "viewType": "marker"
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"airtags\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"YOUR_TAG_PUBKEY_HERE\")\n  |> filter(fn: (r) => r[\"_field\"] == \"latitude\" or r[\"_field\"] == \"longitude\" or r[\"_field\"] == \"tooltip\")\n\n  |> pivot(columnKey: [\"_field\"], rowKey: [\"_time\"], valueColumn: \"_value\")\n  |> duplicate(column: \"latitude\", as: \"lat\")\n  |> duplicate(column: \"longitude\", as: \"lon\")\n  |> keep(columns: [\"_time\", \"popup\", \"tooltip\", \"lat\", \"lon\"])",
+          "refId": "A"
+        }
+      ],
+      "title": "test airtag",
+      "type": "alexandra-trackmap-panel"
+    }
+  ],
+  "refresh": "15m",
+  "schemaVersion": 30,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "",
+  "title": "Not an airtag",
+  "uid": "AQOlODz7k",
+  "version": 11
+}

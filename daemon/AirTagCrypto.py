@@ -57,10 +57,14 @@ class AirTagCrypto:
 
     def decrypt_message(self, payload):
         data = base64.b64decode(payload)
+        timestamp = int.from_bytes(data[0:4], 'big')
         eph_key = data[5:62]
         shared_key = self.__derive_shared_key_from_private_key_and_eph_key(eph_key)
         derived_key = self.__kdf(shared_key, eph_key)
         enc_data = data[62:72]
         tag = data[72:]
         decrypted = self.__decrypt_payload(enc_data, derived_key, tag[:])
-        return self.__decode_tag(decrypted)
+
+        ret = self.__decode_tag(decrypted)
+        ret['timestamp'] = timestamp + 978307200  # 978307200 is delta between unix and cocoa timestamps
+        return ret

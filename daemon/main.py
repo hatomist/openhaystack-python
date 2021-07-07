@@ -25,6 +25,5 @@ if __name__ == "__main__":
                         .field('latitude', decrypt['lat'])
                         .field("longitude", decrypt['lon'])
                         .field("tooltip", date_time.strftime("%d/%m/%Y %H:%M:%S"))
-                        .time(decrypt['timestamp'] * 1000000))
-        print(decrypt['timestamp'])
+                        .time(decrypt['timestamp'] * 1000000000))
     write_api.flush()

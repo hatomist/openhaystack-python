@@ -52,8 +52,8 @@ class AirTagCrypto:
     def __decode_tag(data: bytes):
         latitude = int.from_bytes(data[0:4], 'big') / 10000000.0
         longitude = int.from_bytes(data[4:8], 'big') / 10000000.0
-        accuracy = int.from_bytes(data[8:9], 'big')
-        return {'lat': latitude, 'lon': longitude, 'acc': accuracy}
+        confidence = int.from_bytes(data[8:9], 'big')
+        return {'lat': latitude, 'lon': longitude, 'conf': confidence}
 
     def decrypt_message(self, payload):
         data = base64.b64decode(payload)

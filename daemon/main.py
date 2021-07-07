@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     for result in data['results']:
         decrypt = tags[result['id']].decrypt_message(result['payload'])
-        date_time = datetime.fromtimestamp(int(result['datePublished'])/1000)
+        date_time = datetime.fromtimestamp(decrypt['timestamp'])
         write_api.write(influxdb_db, influxdb_org, Point(result['id'])
                         .tag('report_id', str(hash(result['payload'])))
                         .field('latitude', decrypt['lat'])

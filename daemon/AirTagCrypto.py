@@ -1,5 +1,5 @@
 import base64
-from Cryptodome.Cipher import AES
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.backends import default_backend
@@ -44,9 +44,9 @@ class AirTagCrypto:
     def __decrypt_payload(enc_data: bytes, symmetric_key: bytes, tag: bytes):
         decryption_key = symmetric_key[:16]
         iv = symmetric_key[16:]
-        cipher = AES.new(decryption_key, AES.MODE_GCM, iv, mac_len=12)
-        cipher.update(tag)
-        return cipher.decrypt(enc_data)
+        cipher = Cipher(algorithms.AES(decryption_key), modes.GCM(iv, tag))
+        decryptor = cipher.decryptor()
+        return decryptor.update(enc_data) + decryptor.finalize()
 
     @staticmethod
     def __decode_tag(data: bytes):
@@ -63,7 +63,7 @@ class AirTagCrypto:
         derived_key = self.__kdf(shared_key, eph_key)
         enc_data = data[62:72]
         tag = data[72:]
-        decrypted = self.__decrypt_payload(enc_data, derived_key, tag[:])
+        decrypted = self.__decrypt_payload(enc_data, derived_key, tag)
 
         ret = self.__decode_tag(decrypted)
         ret['timestamp'] = timestamp + 978307200  # 978307200 is delta between unix and cocoa timestamps

@@ -4,6 +4,7 @@ from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import ASYNCHRONOUS
 from datetime import datetime
 from config import *
+from hashlib import md5
 
 client = InfluxDBClient(url=influxdb_url, token=influxdb_token, org=influxdb_org)
 write_api = client.write_api(write_options=ASYNCHRONOUS)
@@ -21,7 +22,7 @@ if __name__ == "__main__":
         decrypt = tags[result['id']].decrypt_message(result['payload'])
         date_time = datetime.fromtimestamp(decrypt['timestamp'])
         write_api.write(influxdb_db, influxdb_org, Point(result['id'])
-                        .tag('report_id', str(hash(result['payload'])))
+                        .tag('report_id', md5(result['payload'].encode()).hexdigest())
                         .field('latitude', decrypt['lat'])
                         .field("longitude", decrypt['lon'])
                         .field("tooltip", date_time.strftime("%d/%m/%Y %H:%M:%S"))

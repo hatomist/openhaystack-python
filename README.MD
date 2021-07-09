@@ -38,5 +38,6 @@ from(bucket: "airtags")
   |> duplicate(column: "latitude", as: "lat")
   |> duplicate(column: "longitude", as: "lon")
   |> keep(columns: ["_time", "popup", "tooltip", "lat", "lon"])
+  |> sort(columns:["_time"])
 ```
 You can find your tag's id in OpenHaystack app by right-clicking your tag and selecting "Copy advertisement key (Base64)". Also, there's a grafana/dashboard.json example dashboard that you can use.

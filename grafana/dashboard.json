@@ -70,7 +70,7 @@
       },
       "targets": [
         {
-          "query": "from(bucket: \"airtags\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"YOUR_TAG_PUBKEY_HERE\")\n  |> filter(fn: (r) => r[\"_field\"] == \"latitude\" or r[\"_field\"] == \"longitude\" or r[\"_field\"] == \"tooltip\")\n\n  |> pivot(columnKey: [\"_field\"], rowKey: [\"_time\"], valueColumn: \"_value\")\n  |> duplicate(column: \"latitude\", as: \"lat\")\n  |> duplicate(column: \"longitude\", as: \"lon\")\n  |> keep(columns: [\"_time\", \"popup\", \"tooltip\", \"lat\", \"lon\"])",
+          "query": "from(bucket: \"airtags\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"YOUR_TAG_PUBKEY_HERE\")\n  |> filter(fn: (r) => r[\"_field\"] == \"latitude\" or r[\"_field\"] == \"longitude\" or r[\"_field\"] == \"tooltip\")\n\n  |> pivot(columnKey: [\"_field\"], rowKey: [\"_time\"], valueColumn: \"_value\")\n  |> duplicate(column: \"latitude\", as: \"lat\")\n  |> duplicate(column: \"longitude\", as: \"lon\")\n  |> keep(columns: [\"_time\", \"popup\", \"tooltip\", \"lat\", \"lon\"])\n  |> sort(columns:[\"_time\"])",
           "refId": "A"
         }
       ],

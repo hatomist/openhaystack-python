@@ -7,9 +7,11 @@ from cryptography.hazmat.primitives import hashes
 
 
 class AirTagCrypto:
-    def __init__(self, private_key: str):
-        self._private_key = base64.b64decode(private_key)
-        pass
+    def __init__(self, private_key: str = None):
+        if private_key is not None:
+            self._private_key = base64.b64decode(private_key)
+        else:
+            self._private_key = self.__generate_new_private_key()
 
     def get_advertisement_key(self) -> str:
         digest = hashes.Hash(hashes.SHA256())
@@ -54,6 +56,11 @@ class AirTagCrypto:
         longitude = int.from_bytes(data[4:8], 'big') / 10000000.0
         confidence = int.from_bytes(data[8:9], 'big')
         return {'lat': latitude, 'lon': longitude, 'conf': confidence}
+
+    @staticmethod
+    def __generate_new_private_key():
+        curve = ec.SECP224R1()
+        return ec.generate_private_key(curve).private_numbers().private_value.to_bytes(28, 'big')
 
     def decrypt_message(self, payload):
         data = base64.b64decode(payload)
